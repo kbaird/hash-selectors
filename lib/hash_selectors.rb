@@ -60,6 +60,15 @@ module HashSelectors
     select { |k,v| vs.include?(v) }
   end
 
+  # @example
+  #   {a: 1, b: 2, c: 3}.values_for_keys :a, :b # returns [1, 2]
+  #
+  # @param [Glob of any type] ks
+  # @return [Array] The values for each respective key in the *ks* argument.
+  def values_for_keys(*ks)
+    ks.select { |k| key?(k) }.map { |k| self[k] }
+  end
+
   Hash.include(self)
 
 end

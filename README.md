@@ -17,3 +17,6 @@ A small set of select methods for Ruby Hashes
 {a: 1, b: 2, c: 3}.partition_by_keys :a, :b # returns [{a: 1, b: 2}, {c: 3}]
 
 {a: 1, b: 2, c: 3}.partition_by_values 1, 3 # returns [{a: 1, c: 3}, {b: 2}]
+
+# values_for_keys
+{a: 1, b: 2, c: nil}.values_for_keys :a, :c # returns [1, nil]

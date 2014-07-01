@@ -91,4 +91,26 @@ RSpec.describe HashSelectors do
     end
   end
 
+  describe "#values_for_keys" do
+    context "assuming a Hash: {a: 1, b: 2, c: {c2: [:d, :e]}}" do
+      let(:the_hash) { {a: 1, b: 2, c: {c2: [:d, :e]}, has_nil_value: nil} }
+      context "and given :a, :d" do
+        subject { the_hash.values_for_keys :a, :d }
+        it { is_expected.to eq([1]) }
+      end
+      context "and given :a, :b" do
+        subject { the_hash.values_for_keys :a, :b }
+        it { is_expected.to eq([1, 2]) }
+      end
+      context "and given :b, :c" do
+        subject { the_hash.values_for_keys :b, :c }
+        it { is_expected.to eq([2, {c2: [:d, :e]}]) }
+      end
+      context "and given :a, :has_nil_value" do
+        subject { the_hash.values_for_keys :a, :has_nil_value }
+        it { is_expected.to eq([1, nil]) }
+      end
+    end
+  end
+
 end
