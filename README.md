@@ -22,4 +22,4 @@ A small set of select methods for Ruby Hashes
 {a: 1, b: 2, c: nil}.values_for_keys :a, :c # returns [1, nil]
 
 # unfiltered_values_for_keys
-{a: 1, b: 2, c: nil}.values_for_keys :a, :c, :d # returns [1, nil, nil]
+{a: 1, b: 2, c: nil}.unfiltered_values_for_keys :a, :c, :d # returns [1, nil, nil]
