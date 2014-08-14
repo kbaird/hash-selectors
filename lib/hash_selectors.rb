@@ -64,9 +64,18 @@ module HashSelectors
   #   {a: 1, b: 2, c: 3}.values_for_keys :a, :b # returns [1, 2]
   #
   # @param [Glob of any type] ks
-  # @return [Array] The values for each respective key in the *ks* argument.
+  # @return [Array] The values for each respective key in the *ks* argument, non-matching keys ignored.
   def values_for_keys(*ks)
     ks.select { |k| key?(k) }.map { |k| self[k] }
+  end
+
+  # @example
+  #   {a: 1, b: 2, c: 3}.unfiltered_values_for_keys :a, :b, :d # returns [1, 2, nil]
+  #
+  # @param [Glob of any type] ks
+  # @return [Array] The values for each respective key in the *ks* argument, non-matching keys returning nil.
+  def unfiltered_values_for_keys(*ks)
+    ks.map { |k| self[k] }
   end
 
   Hash.include(self)
