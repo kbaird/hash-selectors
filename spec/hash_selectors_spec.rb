@@ -7,6 +7,30 @@ RSpec.describe HashSelectors do
 
   ### INSTANCE METHODS
 
+  describe "#merge_into" do
+    context "assuming a Hash: {a: {}, b: 2, c: 3}}" do
+      let(:the_hash) { {a: {}, b: 2, c: 3} }
+      context "and given :a, {a1: :a2}" do
+        subject { the_hash.merge_into(:a, {a1: :a2}) }
+        it { is_expected.to eq({a: {a1: :a2}, b: 2, c: 3}) }
+      end
+    end
+    context "assuming a Hash: {a: {1 => 2}, b: 2, c: 3}}" do
+      let(:the_hash) { {a: {1 => 2}, b: 2, c: 3} }
+      context "and given :a, {a1: :a2}" do
+        subject { the_hash.merge_into(:a, {a1: :a2}) }
+        it { is_expected.to eq({a: {:a1 => :a2, 1 => 2}, b: 2, c: 3}) }
+      end
+    end
+    context "assuming a Hash: {a: {1 => 2}, b: 2, c: 3}}" do
+      let(:the_hash) { {a: {1 => 2}, b: 2, c: 3} }
+      context "and given :d, {d1: :d2}" do
+        subject { the_hash.merge_into(:d, {d1: :d2}) }
+        it { is_expected.to eq({a: {1 => 2}, b: 2, c: 3, d: {d1: :d2}}) }
+      end
+    end
+  end
+
   describe "#partition_by_keys" do
     context "assuming a Hash: {a: 1, b: 2, c: {c2: [:d, :e]}}" do
       let(:the_hash) { {a: 1, b: 2, c: {c2: [:d, :e]}} }
