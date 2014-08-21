@@ -3,10 +3,21 @@
 module HashSelectors
 
   # @example
+  #   {a: {ak: :av}, b: 2, c: 3}.merge_into(:a, {new_k: :new_v}) # returns {a: {ak: :av, new_k: :new_v}, b: 2, c: 3}
+  #
+  # @param [Any] Key to merge at
+  # @param [Hash] Hash of new pairs to merge at the Key
+  # @return [Hash] Merged results
+  def merge_into(the_key, hash_to_merge)
+    sub_hash = self[the_key] || {}
+    merge(the_key => sub_hash.merge(hash_to_merge))
+  end
+
+  # @example
   #   {a: 1, b: 2, c: 3}.partition_by_keys :a, :b # returns [{a: 1, b: 2}, {c: 3}]
   #
   # @param [Glob of any type] ks
-  # @return [Hash] Partitioned results based on whether keys are included within the *ks* argument.
+  # @return [Array of Hashes] Partitioned results based on whether keys are included within the *ks* argument.
   def partition_by_keys(*ks)
     ### OPTIMIZE: Simple partition with the block results in nested Arrays. Investigate.
     blk = lambda { |k,v| ks.include?(k) }
@@ -17,7 +28,7 @@ module HashSelectors
   #   {a: 1, b: 2, c: 3}.partition_by_values 2, 3 # returns [{b: 2, c: 3}, {a: 1}]
   #
   # @param [Glob of any type] vs
-  # @return [Hash] Partitioned results based on whether values are included within the *vs* argument.
+  # @return [Array of Hashes] Partitioned results based on whether values are included within the *vs* argument.
   def partition_by_values(*vs)
     ### OPTIMIZE: Simple partition with the block results in nested Arrays. Investigate.
     blk = lambda { |k,v| vs.include?(v) }
