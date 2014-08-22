@@ -2,7 +2,7 @@ require "rake"
 
 spec = Gem::Specification.new do |s|
   s.name        = "hash_selectors"
-  s.version     = "0.0.3"
+  s.version     = "0.0.4"
   s.summary     = "Some select methods for Ruby Hashes"
   s.description = "Provides additional select-type methods for Ruby Hashes"
   s.authors     = ["Kevin C. Baird"]
