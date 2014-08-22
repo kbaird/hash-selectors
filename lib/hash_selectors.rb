@@ -61,6 +61,7 @@ module HashSelectors
   def select_by_keys(*ks)
     select { |k,v| ks.include?(k) }
   end
+  alias_method :filter_by_keys, :select_by_keys
 
   # @example
   #   {a: 1, b: 2, c: 3}.select_by_values 2, 3 # returns {b: 2, c: 3}
@@ -70,6 +71,7 @@ module HashSelectors
   def select_by_values(*vs)
     select { |k,v| vs.include?(v) }
   end
+  alias_method :filter_by_values, :select_by_values
 
   # @example
   #   {a: 1, b: 2, c: 3}.values_for_keys :a, :b # returns [1, 2]
