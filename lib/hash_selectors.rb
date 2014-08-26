@@ -1,6 +1,5 @@
 # Provides additional select methods for Hashes.
 # Automatically mixed-in to Hash on load.
-require 'byebug'
 
 module HashSelectors
 
@@ -116,5 +115,4 @@ module HashSelectors
     eval("hsh#{key_sequence}.delete(:#{target_keys.first})")
     hsh
   end
-
 end
