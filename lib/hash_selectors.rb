@@ -10,16 +10,14 @@ module HashSelectors
   # @param [Glob of colon-delimited strings] ks
   # @return [Hash] Original hash with specified keys deleted at any level of nesting
   def deep_except(*ks)
-    modified_hsh = dup
+    result = dup
     ks.each do |k|
-      key_nesting_chain = k.split(':').map(&:to_sym)
+      target_keys = k.split(':').map(&:to_sym)
       key_sequence = ""
-      until key_nesting_chain.count == 1
-        key_sequence += "[:#{key_nesting_chain.shift}]"
-      end
-      eval("modified_hsh#{key_sequence}.delete(:#{key_nesting_chain.last})")
+      key_sequence += "[:#{target_keys.shift}]" while target_keys.count > 1
+      eval("result#{key_sequence}.delete(:#{target_keys.first})")
     end
-    modified_hsh
+    result
   end
 
   # @example
