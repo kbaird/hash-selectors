@@ -10,7 +10,7 @@ module HashSelectors
   # @param [Glob of colon-delimited strings] ks
   # @return [Hash] Original hash with specified keys deleted at any level of nesting
   def deep_except(*ks)
-    result = dup
+    result = Marshal.load(Marshal.dump(self))
     ks.each { |k| deep_remove_key(result, k) }
     result
   end
