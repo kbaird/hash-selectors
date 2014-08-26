@@ -191,6 +191,11 @@ RSpec.describe HashSelectors do
         subject { the_hash.deep_except 'd', 'e', 'f' }
         it { is_expected.to eq(the_hash) }
       end
+      it "does not mutate the original hash" do
+        result = the_hash.deep_except 'a', 'b', 'c'
+        expect(result).to be_empty
+        expect(the_hash).to_not be_empty
+      end
     end
   end
 end
