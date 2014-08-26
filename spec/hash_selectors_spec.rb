@@ -7,6 +7,42 @@ RSpec.describe HashSelectors do
 
   ### INSTANCE METHODS
 
+  describe "#deep_except" do
+    context "assuming a Hash: {a: 1, b: 2, c: {c1: 3, c2: 4, c3: { c3a: 5, c3b: 6}}}" do
+      let(:the_hash) { {a: 1, b: 2, c: {c1: 3, c2: 4, c3: { c3a: 5, c3b: 6}}} }
+      context "and given 'c'" do
+        subject { the_hash.deep_except 'c' }
+        it { is_expected.to eq({a: 1, b: 2})}
+      end
+      context "and given 'c:c1'" do
+        subject { the_hash.deep_except 'c:c1' }
+        it { is_expected.to eq({a: 1, b: 2, c: {c2: 4, c3: {c3a: 5, c3b: 6}}})}
+      end
+      context "and given 'c:c3:c3b'" do
+        subject { the_hash.deep_except 'c:c3:c3b' }
+        it { is_expected.to eq({a: 1, b: 2, c: {c1: 3, c2: 4, c3: {c3a: 5}}})}
+      end
+      context "and given 'a', 'c:c2'" do
+        subject { the_hash.deep_except 'a', 'c:c2' }
+        it { is_expected.to eq({b: 2, c: {c1: 3, c3: {c3a: 5, c3b: 6}}})}
+      end
+      context "and given 'b', 'd'" do
+        subject { the_hash.deep_except 'b', 'd' }
+        it { is_expected.to eq({a: 1, c: {c1: 3, c2: 4, c3: {c3a: 5, c3b: 6}}})}
+      end
+      context "and given 'd', 'e:e1', 'f:f2:f2c'" do
+        subject { the_hash.deep_except 'd', 'e', 'f' }
+        it { is_expected.to eq(the_hash) }
+      end
+      it "does not mutate the original hash" do
+        the_hash.deep_except 'a', 'c:c2', 'c:c3:c3a'
+        expect(the_hash.keys).to include(:a)
+        expect(the_hash[:c].keys).to include(:c2)
+        expect(the_hash[:c][:c3].keys).to include(:c3a)
+      end
+    end
+  end
+
   describe "#merge_into" do
     context "assuming a Hash: {a: {}, b: 2, c: 3}}" do
       let(:the_hash) { {a: {}, b: 2, c: 3} }
@@ -164,39 +200,4 @@ RSpec.describe HashSelectors do
     end
   end
 
-  describe "#deep_except" do
-    context "assuming a Hash: {a: 1, b: 2, c: {c1: 3, c2: 4, c3: { c3a: 5, c3b: 6}}}" do
-      let(:the_hash) { {a: 1, b: 2, c: {c1: 3, c2: 4, c3: { c3a: 5, c3b: 6}}} }
-      context "and given 'c'" do
-        subject { the_hash.deep_except 'c' }
-        it { is_expected.to eq({a: 1, b: 2})}
-      end
-      context "and given 'c:c1'" do
-        subject { the_hash.deep_except 'c:c1' }
-        it { is_expected.to eq({a: 1, b: 2, c: {c2: 4, c3: {c3a: 5, c3b: 6}}})}
-      end
-      context "and given 'c:c3:c3b'" do
-        subject { the_hash.deep_except 'c:c3:c3b' }
-        it { is_expected.to eq({a: 1, b: 2, c: {c1: 3, c2: 4, c3: {c3a: 5}}})}
-      end
-      context "and given 'a', 'c:c2'" do
-        subject { the_hash.deep_except 'a', 'c:c2' }
-        it { is_expected.to eq({b: 2, c: {c1: 3, c3: {c3a: 5, c3b: 6}}})}
-      end
-      context "and given 'b', 'd'" do
-        subject { the_hash.deep_except 'b', 'd' }
-        it { is_expected.to eq({a: 1, c: {c1: 3, c2: 4, c3: {c3a: 5, c3b: 6}}})}
-      end
-      context "and given 'd', 'e:e1', 'f:f2:f2c'" do
-        subject { the_hash.deep_except 'd', 'e', 'f' }
-        it { is_expected.to eq(the_hash) }
-      end
-      it "does not mutate the original hash" do
-        the_hash.deep_except 'a', 'c:c2', 'c:c3:c3a'
-        expect(the_hash.keys).to include(:a)
-        expect(the_hash[:c].keys).to include(:c2)
-        expect(the_hash[:c][:c3].keys).to include(:c3a)
-      end
-    end
-  end
 end
