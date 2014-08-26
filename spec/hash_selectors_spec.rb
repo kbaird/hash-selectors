@@ -187,7 +187,7 @@ RSpec.describe HashSelectors do
         subject { the_hash.deep_except 'b', 'd' }
         it { is_expected.to eq({a: 1, c: {c1: 3, c2: 4, c3: {c3a: 5, c3b: 6}}})}
       end
-      context "and given 'd', 'e', 'f'" do
+      context "and given 'd', 'e:e1', 'f:f2:f2c'" do
         subject { the_hash.deep_except 'd', 'e', 'f' }
         it { is_expected.to eq(the_hash) }
       end

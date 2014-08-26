@@ -1,6 +1,25 @@
 # Provides additional select methods for Hashes.
 # Automatically mixed-in to Hash on load.
+require 'byebug'
+
 module HashSelectors
+
+  # @example
+  #   {a: 1, b: 2, c: { c1: 3, c2: 4 }}.deep_except('b', 'c:c1') # returns {a: 1, c: { c2: 4 }}
+  #
+  # @param [Glob of colon-delimited strings] ks
+  # @return [Hash] Original hash with specified keys deleted at any level of nesting
+  def deep_except(*ks)
+    ks.each do |k|
+      key_nesting_chain = k.split(':').map(&:to_sym)
+      string_to_eval = ""
+      until key_nesting_chain.count == 1
+        string_to_eval += "[:#{key_nesting_chain.shift}]"
+      end
+      eval("self#{string_to_eval}.delete(:#{key_nesting_chain.last})")
+    end
+    self
+  end
 
   # @example
   #   {a: {ak: :av}, b: 2, c: 3}.merge_into(:a, {new_k: :new_v}) # returns {a: {ak: :av, new_k: :new_v}, b: 2, c: 3}
