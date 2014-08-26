@@ -192,9 +192,10 @@ RSpec.describe HashSelectors do
         it { is_expected.to eq(the_hash) }
       end
       it "does not mutate the original hash" do
-        result = the_hash.deep_except 'a', 'b', 'c'
-        expect(result).to be_empty
-        expect(the_hash).to_not be_empty
+        the_hash.deep_except 'a', 'c:c2', 'c:c3:c3a'
+        expect(the_hash.keys).to include(:a)
+        expect(the_hash[:c].keys).to include(:c2)
+        expect(the_hash[:c][:c3].keys).to include(:c3a)
       end
     end
   end
