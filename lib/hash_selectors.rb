@@ -15,15 +15,6 @@ module HashSelectors
     result
   end
 
-  # Helper method for #deep_except
-  def deep_remove_key(hsh, k)
-    target_keys = k.split(':').map(&:to_sym)
-    key_sequence = ""
-    key_sequence += "[:#{target_keys.shift}]" while target_keys.count > 1
-    eval("hsh#{key_sequence}.delete(:#{target_keys.first})")
-    hsh
-  end
-
   # @example
   #   {a: {ak: :av}, b: 2, c: 3}.merge_into(:a, {new_k: :new_v}) # returns {a: {ak: :av, new_k: :new_v}, b: 2, c: 3}
   #
@@ -114,5 +105,16 @@ module HashSelectors
   end
 
   Hash.include(self)
+
+  private
+
+  # Helper method for #deep_except
+  def deep_remove_key(hsh, k)
+    target_keys = k.split(':').map(&:to_sym)
+    key_sequence = ""
+    key_sequence += "[:#{target_keys.shift}]" while target_keys.count > 1
+    eval("hsh#{key_sequence}.delete(:#{target_keys.first})")
+    hsh
+  end
 
 end
