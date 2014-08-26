@@ -11,13 +11,17 @@ module HashSelectors
   # @return [Hash] Original hash with specified keys deleted at any level of nesting
   def deep_except(*ks)
     result = dup
-    ks.each do |k|
-      target_keys = k.split(':').map(&:to_sym)
-      key_sequence = ""
-      key_sequence += "[:#{target_keys.shift}]" while target_keys.count > 1
-      eval("result#{key_sequence}.delete(:#{target_keys.first})")
-    end
+    ks.each { |k| deep_remove_key(result, k) }
     result
+  end
+
+  # Helper method for #deep_except
+  def deep_remove_key(hsh, k)
+    target_keys = k.split(':').map(&:to_sym)
+    key_sequence = ""
+    key_sequence += "[:#{target_keys.shift}]" while target_keys.count > 1
+    eval("hsh#{key_sequence}.delete(:#{target_keys.first})")
+    hsh
   end
 
   # @example
