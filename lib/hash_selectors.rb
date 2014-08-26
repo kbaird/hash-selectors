@@ -1,6 +1,18 @@
 # Provides additional select methods for Hashes.
 # Automatically mixed-in to Hash on load.
+
 module HashSelectors
+
+  # @example
+  #   {a: 1, b: 2, c: { c1: 3, c2: 4 }}.deep_except('b', 'c:c1') # returns {a: 1, c: { c2: 4 }}
+  #
+  # @param [Glob of colon-delimited strings] ks
+  # @return [Hash] Original hash with specified keys deleted at any level of nesting
+  def deep_except(*ks)
+    result = Marshal.load(Marshal.dump(self))
+    ks.each { |k| deep_remove_key(result, k) }
+    result
+  end
 
   # @example
   #   {a: {ak: :av}, b: 2, c: 3}.merge_into(:a, {new_k: :new_v}) # returns {a: {ak: :av, new_k: :new_v}, b: 2, c: 3}
@@ -93,4 +105,14 @@ module HashSelectors
 
   Hash.include(self)
 
+  private
+
+  # Helper method for #deep_except
+  def deep_remove_key(hsh, k)
+    target_keys = k.split(':').map(&:to_sym)
+    key_sequence = ""
+    key_sequence += "[:#{target_keys.shift}]" while target_keys.count > 1
+    eval("hsh#{key_sequence}.delete(:#{target_keys.first})")
+    hsh
+  end
 end
